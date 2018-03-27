@@ -1,0 +1,29 @@
+#############  Installing TensorFlow in Raspberry Pi3 ##############
+
+  	1. sudo apt-get update
+
+  Then for Python 2.7
+	2. sudo apt-get install python-pip python-dev
+
+  Then for Python 3.3+
+	2. sudo apt-get install python3-pip python3-dev
+
+  Now Download and install the Wheel File from the Git Repository by Sam Abrahams
+      For Python 2.7
+	3. wget https://github.com/samjabrahams/tensorflow-on-raspberry-pi/releases/download/v1.0.1/tensorflow-1.0.1-cp27-none-linux_armv7l.whl
+	4. sudo pip install tensorflow-1.0.1-cp27-none-linux_armv7l.whl
+     
+      For Python 3.3+
+	3. wget https://github.com/samjabrahams/tensorflow-on-raspberry-pi/releases/download/v1.0.1/tensorflow-1.0.1-cp34-cp34m-linux_armv7l.whl
+	4. sudo pip3 install tensorflow-1.0.1-cp34-cp34m-linux_armv7l.whl
+  
+
+  Now try installing the Mock libraries for protecting from the errors.
+      For Python 2.7
+	5. sudo pip uninstall mock
+	6. sudo pip install mock
+
+      For Python 3.3+
+	5. sudo pip3 uninstall mock
+	6. sudo pip3 install mock
+#######################################################################

@@ -1,0 +1,179 @@
+
+###################### Steps to install OpenCV in Raspberry PI3 ########################
+   
+    Before Starting the Installation Processs First Set the time using the command
+				sudo date mmddhrmnyyyy
+
+  This Command will help you to set the current time in your Raspberry Pi3 Kit so the errors 
+  relating to internet connectivity and package installation can be avoided.  
+
+
+
+Open Configuration to configure the system
+ 1 $ sudo raspi-config
+     ==>Now select Advanced Options ===> Expand File System then click on Finish
+
+ Then the System Will ask for Restart or else manually Reboot the system
+
+Reboot the system  
+ 2 $ sudo reboot
+     
+To check for the available spaces on the card 
+ 3 $ df -h
+
+To free up some space  
+ 4 $ sudo apt-get purge wolfram-engine
+ 5 $ sudo apt-get purge libreoffice*
+ 6 $ sudo apt-get clean
+ 7 $ sudo apt-get autoremove
+ 
+Installing Dependencies:
+  8 $ sudo apt-get update
+  9 $ sudo apt-get upgrade
+  
+  Installing Developer tool.
+     10 $ sudo apt-get install build-essential cmake pkg-config
+
+  Installing Image access tool.
+     11	$ sudo apt-get install libjpeg-dev libtiff5-dev libjasper-dev libpng12-dev
+
+  Installing Video access tool.
+    12 $ sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
+    13 $ sudo apt-get install libxvidcore-dev libx264-dev
+
+  Installing sub-module which is used to display images and for basic GUIs. 
+    14 $ sudo apt-get install libgtk2.0-dev libgtk-3-dev
+    15 sudo apt-get install libatlas-base-dev gfortran
+  Installing Python 2.7 and 3
+    13 $ sudo apt-get install python2.7-dev python3-dev
+   
+    Download the OpenCV source code
+
+     14 $ cd ~
+     15 $ wget -O opencv.zip https://github.com/Itseez/opencv/archive/3.3.0.zip
+     16 $ unzip opencv.zip
+     17 $ wget -O opencv_contrib.zip https://github.com/Itseez/opencv_contrib/archive/3.3.0.zip
+     18 $ unzip opencv_contrib.zip
+
+#### Python 2.7 or Python 3? #####
+ 
+  Before installing OpenCV first install pip, a python package.
+    19 $ wget https://bootstrap.pypa.io/get-pip.py
+    20 $ sudo python get-pip.py
+    21 $ sudo python3 get-pip.py
+    
+
+  Now create a virtual environment to bind every library to it.
+    22 $ sudo pip install virtualenv virtualenvwrapper  
+    23 $ sudo rm -rf ~/.cache/pip
+   
+  ### virtualenv and virtualenvwrapper ###
+    24 export WORKON_HOME=$HOME/.virtualenvs
+    25 source /usr/local/bin/virtualenvwrapper.sh
+
+    26 $ echo -e "\n# virtualenv and virtualenvwrapper" >> ~/.profile
+    27 $ echo "export WORKON_HOME=$HOME/.virtualenvs" >> ~/.profile
+    28 $ echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.profile
+
+    29 $ source ~/.profile
+    
+    Creating your Python virtual environment
+       For python 2
+        30 $ mkvirtualenv cv -p python2
+
+       For python 3
+        31 $ mkvirtualenv cv -p python3
+
+   How to check if you are in the cv virtual environment
+    32 $ source ~/.profile
+    33 $ workon cv
+
+   Installing NumPy  
+    34 $ pip install numpy
+
+   Compile and Install OpenCV 
+    35 $ workon cv
+
+    36 $ cd ~/opencv-3.1.0/
+    37 $ mkdir build
+    38 $ cd build 
+    39 $ cmake -D CMAKE_BUILD_TYPE=RELEASE \
+      	       -D CMAKE_INSTALL_PREFIX=/usr/local \
+      	       -D INSTALL_PYTHON_EXAMPLES=ON \
+      	       -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib-3.1.0/modules \
+      	       -D BUILD_EXAMPLES=ON ..
+
+    # set size to absolute value, leaving empty (default) then uses computed value
+    #   you most likely don't want this, unless you have an special disk situation
+    # CONF_SWAPSIZE=100
+      
+    40  CONF_SWAPSIZE=1024
+	 	
+    41	$ sudo /etc/init.d/dphys-swapfile stop
+    41	$ sudo /etc/init.d/dphys-swapfile start
+  
+    42 $ make -j4
+   
+   If the error "Makefile:160: recipe for target 'all' failed make: *** [all] Error 2"  
+   Occurs then use the command below instead of using "-j4"
+ 
+    42 $ make VERBOSE=1 
+    
+   If there is some problem with the cores then use 
+    42.1 $ make clean
+    42.2 $ make
+  
+    43 $ sudo make install
+    44 $ sudo ldconfig  
+
+   Finish installing OpenCV
+    Now for python 2.7 
+        45 $ ls -l /usr/local/lib/python2.7/site-packages/
+            You will get this displayed 
+            total 1852
+            -rw-r--r-- 1 root staff 1895772 Mar 20 20:00 cv2.so
+
+    	46 $ cd ~/.virtualenvs/cv/lib/python2.7/site-packages/
+    	47 $ ln -s /usr/local/lib/python2.7/site-packages/cv2.so cv2.so  
+  
+    Now for python 3
+        48  $ ls -l /usr/local/lib/python3.4/site-packages/
+              You will get this displayed
+               total 1852
+               -rw-r--r-- 1 root staff 1895932 Mar 20 21:51 cv2.cpython-34m.so
+
+     	44 $ cd /usr/local/lib/python3.5/site-packages/
+	45 $ sudo mv cv2.cpython-35m-arm-linux-gnueabihf.so cv2.so
+     	46 $ cd ~/.virtualenvs/cv/lib/python3.5/site-packages/
+	47 $ ln -s /usr/local/lib/python3.5/site-packages/cv2.so cv2.so
+
+    Testing your OpenCV 3 install
+        48 $ source ~/.profile 
+        49 $ workon cv
+        50 $ python
+        51 >>> import cv2
+        52 >>> cv2.__version__   
+              '3.1.0'
+           >>>
+    Install Some necessary packages
+          $ sudo pip install argparse
+          $ sudo pip install matplotlib
+          $ sudo pip install mahotas
+          $ sudo pip install imutils
+          $ sudo pip install keras 
+ 
+    Installing Scipy
+
+   	  $ sudo apt-get install python3-scipy
+
+    Installing Scikit packages
+
+          $ sudo pip install scikit-learn 
+   	  $ sudo pip install scikit-image
+    
+    Installing Keras                 # Deep Learning Package
+          $ sudo pip install keras
+	  $ sudo pip install theano  # Install this if you want work with the Theano backend for keras 
+
+  You Can also use "Tensorflow" as the backend of the keras. For installation Procedures check the Installation of Tensorflow File   
+
